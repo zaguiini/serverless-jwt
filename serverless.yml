@@ -1,0 +1,40 @@
+plugins:
+  - serverless-offline
+
+service: authorizer-serverless
+app: authorizer-serverless
+# org: example # enable this on deployment pointing to the correct app, otherwise it won't work
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  apiKeys:
+    - TestApiKey
+  stage: test
+
+functions:
+  accessTokenAuthorizer:
+    handler: src/authorizers/access-token.handler
+
+  login:
+    handler: src/endpoints/login.postHandler
+    events:
+      - http:
+          path: /auth/login
+          method: post
+          private: true
+
+  refreshToken:
+    handler: src/endpoints/refresh-token.postHandler
+    events:
+      - http:
+          path: /auth/token
+          method: post
+
+  getMe:
+    handler: src/endpoints/me.getHandler
+    events:
+      - http:
+          path: /users/me
+          method: get
+          authorizer: accessTokenAuthorizer
