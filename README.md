@@ -6,6 +6,10 @@ A serverless API powered by API Gateway with JWT authentication
 
 Install with `yarn install` and run `yarn start` to fire the development server
 
+## Deployment
+
+Just run `yarn deploy`. It will output the API keys and the endpoints at the end, along with the selected stage
+
 ## Routes
 
 ### /auth/login
