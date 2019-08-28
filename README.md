@@ -22,7 +22,7 @@ The user endpoint, just to test the access token. Uses the GET method and expect
 
 ### /auth/token
 
-The token renewal endpoints. Expected the POST method and the `Authorization` header in the format `Bearer refreshToken`. Should return two new tokens
+The token renewal endpoints. Expects the POST method and the `Authorization` header in the format `Bearer refreshToken`. Should return two new tokens
 
 ## TODO
 
