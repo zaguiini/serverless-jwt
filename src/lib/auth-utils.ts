@@ -1,29 +1,27 @@
-const { promisify } = require('util')
-const jwt = require('jsonwebtoken')
+import jwt, { SignOptions, VerifyOptions } from 'jsonwebtoken'
+import { promisify } from 'util'
 
-const { decodeBase64 } = require('./string-utils')
-const { error } = require('./response-utils')
+import { error } from './response-utils'
+import { decodeBase64 } from './string-utils'
 
-const sign = promisify(jwt.sign)
-const verify = promisify(jwt.verify)
+const sign = promisify<object, string, SignOptions, string>(jwt.sign)
+const verify = promisify<string, string, VerifyOptions | undefined, any>(
+  jwt.verify
+)
 
-exports.getUserAndPassword = base64Credentials => {
+export const getUserAndPassword = (base64Credentials: string) => {
   const [user, password] = decodeBase64(base64Credentials).split(':')
 
   return { user, password }
 }
 
-exports.verifyToken = async (token, tokenType) => {
-  console.log('token', token)
-
+export const verifyToken = async (token: string, tokenType: 'AT' | 'RT') => {
   try {
-    const decoded = await verify(token, 'secret')
+    const decoded = await verify(token, 'secret', undefined)
 
     if (decoded.jty !== tokenType) {
       throw new Error(`Incorrect token type. Expected: ${tokenType}`)
     }
-
-    console.log('decoded token', JSON.stringify(decoded))
 
     return decoded
   } catch (e) {
@@ -32,7 +30,7 @@ exports.verifyToken = async (token, tokenType) => {
   }
 }
 
-exports.getToken = (auth, correctType) => {
+export const getToken = (auth: string, correctType: 'Bearer' | 'Basic') => {
   const [type, credentials] = auth.split(' ')
 
   if (type !== correctType || !credentials) {
@@ -42,7 +40,7 @@ exports.getToken = (auth, correctType) => {
   return credentials
 }
 
-exports.generateTokens = async ({ user }) => {
+export const generateTokens = async ({ user }: { user: string }) => {
   const accessToken = await sign({ jty: 'AT' }, 'secret', {
     expiresIn: '1h',
     subject: user,

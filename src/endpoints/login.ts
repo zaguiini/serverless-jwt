@@ -1,21 +1,25 @@
-const {
-  getToken,
-  getUserAndPassword,
-  generateTokens,
-} = require('../lib/auth-utils')
-const { response, error } = require('../lib/response-utils')
+import { APIGatewayEvent } from 'aws-lambda'
+import { generateTokens, getToken, getUserAndPassword } from 'src/lib/auth-utils'
+import { error, response } from 'src/lib/response-utils'
 
-const checkCredentials = ({ user, password }) => {
+const checkCredentials = ({
+  user,
+  password,
+}: {
+  user: string
+  password: string
+}) => {
   if (user !== 'user@example.com' || password !== 'password') {
     throw error(401, 'Invalid credentials')
   }
 }
 
-exports.postHandler = async event => {
+export const postHandler = async (event: APIGatewayEvent) => {
   try {
     const token = getToken(event.headers.Authorization, 'Basic')
     const { user, password } = getUserAndPassword(token)
-    await checkCredentials({ user, password })
+
+    checkCredentials({ user, password })
 
     const tokens = await generateTokens({ user })
 

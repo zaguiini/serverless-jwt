@@ -1,4 +1,5 @@
 plugins:
+  - serverless-webpack
   - serverless-offline
 
 service: authorizer-serverless

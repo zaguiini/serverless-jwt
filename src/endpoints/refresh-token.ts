@@ -1,7 +1,8 @@
-const { getToken, verifyToken, generateTokens } = require('../lib/auth-utils')
-const { response } = require('../lib/response-utils')
+import { APIGatewayEvent } from 'aws-lambda'
+import { generateTokens, getToken, verifyToken } from 'src/lib/auth-utils'
+import { response } from 'src/lib/response-utils'
 
-exports.postHandler = async event => {
+export const postHandler = async (event: APIGatewayEvent) => {
   try {
     const refreshToken = getToken(event.headers.Authorization, 'Bearer')
     const { sub: user } = await verifyToken(refreshToken, 'RT')

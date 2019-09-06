@@ -1,6 +1,7 @@
-const { getToken, verifyToken } = require('../lib/auth-utils')
+import { CustomAuthorizerEvent } from 'aws-lambda'
+import { getToken, verifyToken } from 'src/lib/auth-utils'
 
-const generatePolicy = (principalId, Resource) => {
+const generatePolicy = (principalId: string, Resource: string) => {
   return {
     principalId,
     policyDocument: {
@@ -16,9 +17,9 @@ const generatePolicy = (principalId, Resource) => {
   }
 }
 
-exports.handler = async event => {
+export const handler = async (event: CustomAuthorizerEvent) => {
   try {
-    const accessToken = getToken(event.authorizationToken, 'Bearer')
+    const accessToken = getToken(event.authorizationToken!, 'Bearer')
     const { sub } = await verifyToken(accessToken, 'AT')
 
     return generatePolicy(sub, event.methodArn)

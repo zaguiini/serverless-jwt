@@ -2,3 +2,6 @@ node_modules
 *.zip
 .DS_Store
 .serverless
+.vscode
+*.d.ts
+.webpack
