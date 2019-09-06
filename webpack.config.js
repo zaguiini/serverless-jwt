@@ -6,17 +6,19 @@ const walk = function(dir, fileList = []) {
   const files = fs.readdirSync(dir)
 
   files.forEach(function(file) {
-    if (fs.statSync(dir + '/' + file).isDirectory()) {
-      fileList = walk(dir + '/' + file + '/', fileList)
+    const filePath = dir + '/' + file
+
+    if (fs.statSync(filePath).isDirectory()) {
+      fileList = walk(filePath, fileList)
     } else {
-      fileList.push(dir + '/' + file)
+      fileList.push('src' + filePath.split('src')[1].replace(/\.[^/.]+$/, ''))
     }
   })
 
   return fileList
 }
 
-const src = path.resolve(__dirname, 'src')
+const srcPath = path.resolve(__dirname, 'src')
 
 const assign = (src, dest) => {
   for (let entry of src) {
@@ -26,7 +28,10 @@ const assign = (src, dest) => {
   return dest
 }
 
-const entries = assign(walk(path.resolve(src, 'lib')), serverless.lib.entries)
+const entries = assign(
+  walk(path.resolve(srcPath, 'lib')),
+  serverless.lib.entries
+)
 
 module.exports = {
   entry: entries,
@@ -34,7 +39,7 @@ module.exports = {
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {
-      src,
+      src: srcPath,
     },
   },
   module: {
