@@ -6,7 +6,7 @@
   "scripts": {
     "start": "yarn dev",
     "dev": "serverless offline",
-    "deploy": "serverless deploy -v"
+    "deploy:prod": "NODE_ENV=production serverless deploy -s prod -v"
   },
   "dependencies": {
     "jsonwebtoken": "^8.5.1"
@@ -17,6 +17,7 @@
     "@babel/preset-typescript": "^7.3.3",
     "@types/aws-lambda": "^8.10.31",
     "@types/jsonwebtoken": "^8.3.3",
+    "@types/node": "^12.7.4",
     "babel-loader": "^8.0.6",
     "serverless": "^1.51.0",
     "serverless-offline": "^5.10.1",

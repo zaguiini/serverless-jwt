@@ -14,7 +14,7 @@ Just run `yarn deploy`. It will output the API keys and the endpoints at the end
 
 ### /auth/login
 
-The login endpoint. Uses the POST method and expects the `x-api-key` header (the API key will be displayed on the terminal/console) and the credentials in the Basic format (`user:password` in base64 encoding) at the `Authorization` header. Should return the access token (valid for 1 hour) and a refresh token (valid for 1 month)
+The login endpoint. Uses the POST method and expects the `x-api-key` header (the API key will be displayed on the terminal/console on dev mode) and the credentials in the Basic format (`user:password` in base64 encoding) at the `Authorization` header. Should return the access token (valid for 1 hour) and a refresh token (valid for 1 month)
 
 ### /users/me
 

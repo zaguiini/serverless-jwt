@@ -1,45 +1,38 @@
-const path = require('path')
-const fs = require('fs')
-const serverless = require('serverless-webpack')
+const { resolve, join } = require('path')
+const { readdirSync, statSync } = require('fs')
+
+const SRC_RELATIVE_PATH = './src'
 
 const walk = function(dir, fileList = []) {
-  const files = fs.readdirSync(dir)
+  const files = readdirSync(dir)
 
   files.forEach(function(file) {
-    const filePath = dir + '/' + file
+    const filePath = join(dir, file)
 
-    if (fs.statSync(filePath).isDirectory()) {
+    if (statSync(filePath).isDirectory()) {
       fileList = walk(filePath, fileList)
     } else {
-      fileList.push('src' + filePath.split('src')[1].replace(/\.[^/.]+$/, ''))
+      fileList.push(filePath.replace(/\.[^/.]+$/, ''))
     }
   })
 
   return fileList
 }
 
-const srcPath = path.resolve(__dirname, 'src')
-
-const assign = (src, dest) => {
-  for (let entry of src) {
-    dest[entry] = entry
-  }
-
-  return dest
+const toObject = array => {
+  return array.reduce((acc, next) => {
+    acc[next] = next
+    return acc
+  }, {})
 }
 
-const entries = assign(
-  walk(path.resolve(srcPath, 'lib')),
-  serverless.lib.entries
-)
-
 module.exports = {
-  entry: entries,
-  mode: serverless.lib.webpack.isLocal ? 'development' : 'production',
+  entry: Object.assign({}, toObject(walk(SRC_RELATIVE_PATH))),
+  mode: process.env.NODE_ENV === 'production' ? 'production' : 'development',
   resolve: {
     extensions: ['.ts', '.js'],
     alias: {
-      src: srcPath,
+      src: resolve(__dirname, SRC_RELATIVE_PATH),
     },
   },
   module: {

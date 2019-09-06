@@ -18,7 +18,7 @@ functions:
     handler: src/authorizers/access-token.handler
 
   login:
-    handler: src/endpoints/login.postHandler
+    handler: src/endpoints/auth/login.postHandler
     events:
       - http:
           path: /auth/login
@@ -26,14 +26,14 @@ functions:
           private: true
 
   refreshToken:
-    handler: src/endpoints/refresh-token.postHandler
+    handler: src/endpoints/auth/token.postHandler
     events:
       - http:
           path: /auth/token
           method: post
 
   getMe:
-    handler: src/endpoints/me.getHandler
+    handler: src/endpoints/users/me.getHandler
     events:
       - http:
           path: /users/me
